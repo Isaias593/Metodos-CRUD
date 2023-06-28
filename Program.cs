@@ -1,104 +1,86 @@
-using app1_Migrations.Modelos;
-using Microsoft.EntityFrameworkCore;
+
+using DAWA_MetodosCRUD.Models;
 
 class Program
 {
     static void Main(string[] args)
     {
-        //agregarEstudiante();
-        //consultarEstudiantes();
-        //consultarEstudiante();
-        modificarEstudiante();
-        //eliminarEstudiante();
-        consultarEstudiantesFunciones();
+        addCliente();
+        updateCliente();
+        listClientes();
+        findClienteId(1);
+        findClienteName("Jose");
     }
 
-    //agregar estudiante
-    public static void agregarEstudiante()
+    public static void addCliente()
     {
-        AplicationDbContext context = new AplicationDbContext();
+        Console.WriteLine("Agregar Cliente:");
 
-        Console.WriteLine("Metodo agregar estudiante");
-        Usuario user = new Usuario();
-        user.Name = "Isaaias";
-        user.Lastname = "PCZ";
-        user.Direccion = "Mapasingue este";
-        user.Phone = "1234555";
-        user.Birthday = "12/06/2001";
-        user.Status = true;
-        context.Usuarios.Add(user);
+        AppDbContext context = new AppDbContext();
+        Cliente cliente = new Cliente();
+
+        cliente.Nombre = "NIC";
+        cliente.Apellido = "EZAAZ";
+        cliente.Direccion = "TRIKITRAKATELAS";
+        cliente.Telefono = "0123456789";
+        cliente.FechaNacimiento = new DateTime(1999, 4, 19);
+        cliente.Estado = true;
+
+        context.Cliente.Add(cliente);
         context.SaveChanges();
 
-        Console.WriteLine("Codigo: " + user.Id + " Name: " + user.Name);
+        Console.WriteLine("Se agrego el cliente: " + cliente.Nombre + " " + cliente.Apellido);
+    }
+
+    public static void updateCliente()
+    {
+        Console.WriteLine("Modificar Cliente:");
+
+        AppDbContext context = new AppDbContext();
+        Cliente cliente = new Cliente();
+
+        cliente = context.Cliente.Find(1);
+        cliente.Nombre = "TRIKITRI";
+        cliente.Apellido = "SACAKTALE";
+        context.SaveChanges();
+        Console.WriteLine("Se actualizo información del cliente: " + cliente.Nombre + " " + cliente.Apellido);
 
     }
 
-    public static void consultarEstudiantes()
+    public static void listClientes()
     {
-        AplicationDbContext context = new AplicationDbContext();
-
-        List<Usuario> listEstudiantes = context.Usuarios.ToList();
-
-        foreach (var item in listEstudiantes)
+        Console.WriteLine("Listar Clientes");
+        AppDbContext context = new AppDbContext();
+        List<Cliente> listClientes;
+        listClientes = context.Cliente.ToList();
+        foreach (var item in listClientes)
         {
-            Console.WriteLine("Codigo: " + item.Id + " Name: " + item.Name);
+            Console.WriteLine("Nombre: " + item.Nombre + " Apellido: " + item.Apellido);
         }
-
     }
 
-    public static void consultarEstudiante()
+    public static void findClienteId(int Id)
     {
-        Console.WriteLine("Metodo consultar estudiante por Id");
-        AplicationDbContext context = new AplicationDbContext();
-        Usuario user = new Usuario();
-        user = context.Usuarios.Find(1);
+        Console.WriteLine("Buscar Cliente por ID:");
 
-        Console.WriteLine("Codigo: " + user.Id + " Name: " + user.Name);
+        AppDbContext context = new AppDbContext();
+        Cliente cliente = new Cliente();
 
+        cliente = context.Cliente.Find(Id);
+        Console.WriteLine("Cliente encontrado Id (" + cliente.IdCliente + "): " +
+            cliente.Nombre + " " + cliente.Apellido);
     }
 
-    public static void modificarEstudiante()
+    public static void findClienteName(String name)
     {
-        Console.WriteLine("Metodo modificar estudiante");
-        AplicationDbContext context = new AplicationDbContext();
-        Usuario user = new Usuario();
-        user = context.Usuarios.Find(1);
+        Console.WriteLine("Buscar Cliente por Nombre:");
 
-        user.Name = "Anahi";
-        context.SaveChanges();
-        Console.WriteLine("Codigo: " + user.Id + " Name: " + user.Name);
-
-    }
-
-    public static void eliminarEstudiante()
-    {
-        Console.WriteLine("Metodo eliminar estudiante");
-        AplicationDbContext context = new AplicationDbContext();
-        Usuario user = new Usuario();
-        user = context.Usuarios.Find(5);
-        context.Remove(user);
-        context.SaveChanges();
-        Console.WriteLine("Codigo: " + user.Id + " Name: " + user.Name);
-
-    }
-    public static void consultarEstudiantesFunciones()
-    {
-        Console.WriteLine("Metodo consultar estudiantes con el uso de funciones");
-        AplicationDbContext context = new AplicationDbContext();
-        List<Usuario> listEstudiantes;
-
-        Console.WriteLine("Cantidad de registros: " + context.Usuarios.Count());
-        Usuario user = context.Usuarios.First();
-
-        Console.WriteLine("Primer elemento de la tabla:" + user.Id + "-" + user.Name);
-
-        listEstudiantes = context.Usuarios.Where(s => s.Name.StartsWith("A")).ToList();
-
-
-
-        foreach (var item in listEstudiantes)
+        AppDbContext context = new AppDbContext();
+        List<Cliente> listClientes;
+        listClientes = context.Cliente.Where(c => c.Nombre == name).ToList();
+        foreach (var item in listClientes)
         {
-            Console.WriteLine("Codigo: " + item.Id + " Name: " + item.Name);
+            Console.WriteLine("Nombre: " + item.Nombre + " Apellido: " + item.Apellido);
         }
     }
 }
